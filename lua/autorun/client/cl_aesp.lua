@@ -17,11 +17,11 @@ AESP.Config = AESP.Config or {
 
 print("Admin ESP loaded, type esp_help for information on how to use this script.")
 
-local function esphelpcommand()
+local function ESPHelp()
 	print("This is a simple ESP that was created by Subject_Alpha (STEAM_0:0:41620517), to use type in the console admin_esp 1, to turn off type in admin_esp 0")
 end
 
-concommand.Add("esp_help", esphelpcommand)
+concommand.Add("esp_help", ESPHelp)
 
 surface.CreateFont("aesp_font", {
    font = "Arial",

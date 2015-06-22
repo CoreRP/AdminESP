@@ -1,4 +1,15 @@
-include("config.lua")
+--[[
+Config area. No need for 2 files if they're both small.
+]]
+AESP = AESP or {}
+AESP.Config = AESP.Config or {
+  ShowPing  = true,
+  ShowHealth  = true,
+  ShowArmor = true,
+  ShowGroup = true,
+  ShowJob   = true,
+  ShowMoney = true -- Only set to true if using DarkRP
+}
 
 --[[
   Do NOT touch below this line.

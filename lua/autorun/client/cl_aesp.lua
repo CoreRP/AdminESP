@@ -42,8 +42,11 @@ local function DrawAdminESP()
   if(ESP:GetInt() < 1) then return; end
 
   for k, v in pairs(player.GetAll()) do
-		if (v == LocalPlayer()) then
-			continue
+		if( v == LocalPlayer() ||
+			!v:Alive() ||
+			v:Team() == TEAM_SPECTATOR ||
+			v:GetMoveType() == MOVETYPE_OBSERVER ) then
+				continue;
 		end
       
     if(LocalPlayer():GetPos():Distance(v:GetPos()) < ESP_d:GetInt()) then

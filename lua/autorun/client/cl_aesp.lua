@@ -1,77 +1,158 @@
---[[
-Config area. No need for 2 files if they're both small.
-]]
 AESP = AESP or {}
-AESP.Config = AESP.Config or {
-  ShowPing  = true,
-  ShowHealth  = true,
-  ShowArmor = true,
-  ShowGroup = true,
-  ShowJob   = true,
-  ShowMoney = true -- Only set to true if using DarkRP
-}
+AESP.Config = AESP.Config or {}
 
---[[
-  Do NOT touch below this line.
-]]
+-- Enable/disable the ESP
+AESP.Config.Enabled     = CreateClientConVar("admin_esp_enabled", "0" , false, false)
+-- Set the max draw distance
+AESP.Config.MaxDistance = CreateClientConVar("admin_esp_maxdistance", "999999", true, false)
 
-print("Admin ESP loaded, type esp_help for information on how to use this script.")
+-- Set the text offset in the x direction
+AESP.Config.TextOffsetX = CreateClientConVar("admin_esp_offsetx", "0" , true, false)
+-- Set the text offset in the y direction
+AESP.Config.TextOffsetY = CreateClientConVar("admin_esp_offsety", "0" , true, false)
 
-local function ESPHelp()
-	print("This is a simple ESP that was created by Subject_Alpha (STEAM_0:0:41620517), to use type in the console admin_esp 1, to turn off type in admin_esp 0")
-end
+-- Draw the target's model, visible through the world
+AESP.Config.ShowModel   = CreateClientConVar("admin_esp_drawmodel", 1, true, false)
 
-concommand.Add("esp_help", ESPHelp)
+-- Draw the target's name
+AESP.Config.ShowName    = CreateClientConVar("admin_esp_drawname", "1", true, false)
+-- Draw the target's Steam ID
+AESP.Config.ShowSteamID = CreateClientConVar("admin_esp_drawsteamid", "1", true, false)
+-- Draw the target's ping
+AESP.Config.ShowPing    = CreateClientConVar("admin_esp_drawping", "0", true, false)
+-- Draw the target's health
+AESP.Config.ShowHealth  = CreateClientConVar("admin_esp_drawhealth", "0", true, false)
+-- Draw the target's armor
+AESP.Config.ShowArmor   = CreateClientConVar("admin_esp_drawarmor", "0", true, false)
+-- Draw the target's group (i.e. ULX)
+AESP.Config.ShowGroup   = CreateClientConVar("admin_esp_drawgroup", "0", true, false)
+-- DarkRP Only
+-- Draw the target's job
+AESP.Config.ShowJob     = CreateClientConVar("admin_esp_darkrp_drawjob", "0", true, false)
+-- Draw the target's money
+AESP.Config.ShowMoney   = CreateClientConVar("admin_esp_darkrp_drawmoney", "0", true, false)
+-- TTT only
+-- Draw the target's role (i.e. Traitor, Innocent, Detective)
+AESP.Config.ShowRole    = CreateClientConVar("admin_esp_ttt_drawrole", "0", true, false)
+
+concommand.Add("admin_esp_getgamemode", function()
+    print(string.lower(gmod.GetGamemode().Name))
+end)
 
 surface.CreateFont("aesp_font", {
-   font = "Arial",
-   size = 15,
-   weight = 50,
-   antialias = true
+   font         = "Arial",
+   size         = 15,
+   weight       = 50,
+   antialias    = true
 })
 
-local ESP = CreateClientConVar("admin_esp", "0" , true, false)
-local ESP_d = CreateClientConVar("esp_d", "999999", true, false)
-
-local function DrawText(strText, oCol, iXPos, iYPos)
-	draw.SimpleTextOutlined(strText, "aesp_font", iXPos, iYPos, col, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+local function DrawText(text, color, x, y)
+    draw.SimpleTextOutlined(text, "aesp_font", x, y, color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
 end
 
-local function DrawAdminESP()
-  if(!LocalPlayer():IsSuperAdmin()) then return; end
-  if(ESP:GetInt() < 1) then return; end
+local function DrawTextESP(target)
+    -- darkrp, terrortown, sandbox, murder, etc
+    local gamemodeName = string.lower(gmod.GetGamemode().Name)
 
-  for k, v in pairs(player.GetAll()) do
-		if( v == LocalPlayer() ||
-		!v:Alive() ||
-		v:Team() == TEAM_SPECTATOR ||
-		v:GetMoveType() == MOVETYPE_OBSERVER ) then
-			continue;
-		end
-      
-    if(LocalPlayer():GetPos():Distance(v:GetPos()) < ESP_d:GetInt()) then
-      local Pos = (v:GetPos() + Vector(0, 0, 50)):ToScreen()
-            DrawText("Name: "..v:Nick(),             team.GetColor(v:Team()),   Pos.x, Pos.y + 13 * 0)
-            DrawText("SteamID: "..v:SteamID(),       Color(255, 255, 255, 255), Pos.x, Pos.y + 13 * 1)
-            if AESP.Config["ShowPing"] then
-              DrawText("Ping: "..v:Ping(),             Color(255, 255, 255, 255), Pos.x, Pos.y + 13 * 2)
-            end
-            if AESP.Config["ShowHealth"] then
-              DrawText("Health: "..v:Health(),         Color(255, 255, 255, 255), Pos.x, Pos.y + 13 * 3)
-            end
-            if AESP.Config["ShowArmor"] then
-              DrawText("Armor: "..v:Armor(),           Color(255, 255, 255, 255), Pos.x, Pos.y + 13 * 4)
-            end
-            if AESP.Config["ShowGroup"] then
-              DrawText("Usergroup: "..v:GetNWString("usergroup"), Color(255, 255, 255, 255), Pos.x, Pos.y + 13 * 5)
-            end
-            if AESP.Config["ShowJob"] then
-              DrawText("Job: "..team.GetName(v:Team()), Color(255, 255, 255, 255), Pos.x, Pos.y + 13 * 6)
-            end
-            if AESP.Config["ShowMoney"] then
-              DrawText("$"..v:getDarkRPVar("money"), Color(255, 255, 255, 255), Pos.x, Pos.y + 13 * 7)
-            end
-      end
+    -- Where to draw the text in relation to the target
+    -- TODO: Make it so this doesn't scale based on distance from target
+    local initialTextPos = (target:GetPos() + Vector(0, 0, 50)):ToScreen()
+    local textPosition = Vector(initialTextPos.x + AESP.Config.TextOffsetX:GetInt(),
+        initialTextPos.y + AESP.Config.TextOffsetY:GetInt())
+    local nextLineOffset = 0
+    local textColor = Color(255, 255, 255, 255)
+
+    if AESP.Config.ShowName:GetBool() then
+        DrawText("Name: " .. target:Nick(), textColor, textPosition.x, textPosition.y + nextLineOffset)
+        nextLineOffset = nextLineOffset + 13
+    end
+    
+    if AESP.Config.ShowSteamID:GetBool() then
+        DrawText("SteamID: " .. target:SteamID(), textColor, textPosition.x, textPosition.y + nextLineOffset)
+        nextLineOffset = nextLineOffset + 13
+    end
+
+    if AESP.Config.ShowPing:GetBool() then
+        DrawText("Ping: " .. target:Ping(), textColor, textPosition.x, textPosition.y + nextLineOffset)
+        nextLineOffset = nextLineOffset + 13
+    end
+
+    if AESP.Config.ShowHealth:GetBool() then
+        DrawText("Health: " .. target:Health(), textColor, textPosition.x, textPosition.y + nextLineOffset)
+        nextLineOffset = nextLineOffset + 13
+    end
+
+    if AESP.Config.ShowArmor:GetBool() then
+        DrawText("Armor: " .. target:Armor(), textColor, textPosition.x, textPosition.y + nextLineOffset)
+        nextLineOffset = nextLineOffset + 13
+    end
+
+    if AESP.Config.ShowGroup:GetBool() then
+        DrawText("Usergroup: " .. target:GetNWString("usergroup"), textColor, textPosition.x, textPosition.y + nextLineOffset)
+        nextLineOffset = nextLineOffset + 13
+    end
+
+    if AESP.Config.ShowJob:GetBool() and gamemodeName == "darkrp" then
+        DrawText("Job: " .. team.GetName(target:Team()), textColor, textPosition.x, textPosition.y + nextLineOffset)
+        nextLineOffset = nextLineOffset + 13
+    end
+
+    if AESP.Config.ShowMoney:GetBool() and gamemodeName == "darkrp" then
+        DrawText("$" .. target:getDarkRPVar("money"), textColor, textPosition.x, textPosition.y + nextLineOffset)
+        nextLineOffset = nextLineOffset + 13
+    end
+
+    -- This doesn't work right now, shows Traitors as Innocents
+    -- Probably has to do with client-side shit, I'll figure it out later
+    if AESP.Config.ShowRole:GetBool() and gamemodeName == "trouble in terrorist town" then
+        local roleText = ""
+        if target:IsTraitor() then
+            roleText = "Traitor"
+        elseif target:IsDetective() then
+            roleText = "Detective"
+        else
+            roleText = "Innocent"
+        end
+        
+        DrawText("Role:" .. roleText, textColor, textPosition.x, textPosition.y + nextLineOffset)
     end
 end
-hook.Add("HUDPaint", "DrawAdminESP", DrawAdminESP)
+
+local function DrawModelESP(target)
+    if not AESP.Config.ShowModel:GetBool() then return end
+    
+    cam.Start3D(EyePos(), EyeAngles())
+        cam.IgnoreZ(true)
+        target:DrawModel(STUDIO_NOSHADOWS)
+        cam.IgnoreZ(false)
+    cam.End3D()
+end
+
+local function TargetIsValid(target)
+    if target == LocalPlayer()
+        or !target:Alive()
+        or target:Team() == TEAM_SPECTATOR
+        or target:GetMoveType() == MOVETYPE_OBSERVER
+        or LocalPlayer():GetPos():Distance(target:GetPos()) > AESP.Config.MaxDistance:GetInt()
+    then
+        return false
+    else
+        return true
+    end
+end
+
+local function CalcESP()
+    -- Check if the player can access this
+    if not (LocalPlayer():IsSuperAdmin() or LocalPlayer():IsAdmin()) then return end
+    -- Check if the player enabled AESP
+    if AESP.Config.Enabled:GetInt() < 1 then return end
+
+    for _, target in pairs(player.GetAll()) do
+        if not TargetIsValid(target) then continue end
+
+        DrawTextESP(target)
+        DrawModelESP(target)
+    end
+end
+
+hook.Add("HUDPaint", "DrawAdminESP", CalcESP)

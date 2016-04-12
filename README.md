@@ -19,7 +19,7 @@ All of the configuration is done client-side. Note that, in this addon's current
 **NB:** These are all client-side. Setting these in your server.cfg will not do anything.
 
 | Command               | Purpose                                                       | Default Value | Notes |
-| --------------------- | ------------------------------------------------------------- | ------------- | ----- |
+| --------------------- | :-----------------------------------------------------------: | ------------- | ----- |
 | aesp_getgamemode      | Prints the name of the current gamemode. For developers.      | n/a           |       |
 | aesp_enabled          | Set to 1 to enable the ESP                                    | 0             |       |
 | aesp_maxdistance      | Targets further away than this distance will not be rendered  | 16384         |       |

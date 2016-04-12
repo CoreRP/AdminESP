@@ -18,22 +18,22 @@ All of the configuration is done client-side. Note that, in this addon's current
 
 **NB:** These are all client-side. Setting these in your server.cfg will not do anything.
 
-| Command               | Purpose                                                       | Default Value |
-| --------------------- | ------------------------------------------------------------- | ------------- |
-| aesp_getgamemode      | Prints the name of the current gamemode. For developers.      | n/a           |
-| aesp_enabled          | Set to 1 to enable the ESP                                    | 0             |
-| aesp_maxdistance      | Targets further away than this distance will not be rendered  | 16384         |
-| aesp_offsety          | Sets the text offset up/down of each target                   | 50            |
-| aesp_drawmodel        | Draws the target's model through walls            [**Δ**][1]  | 0             |
-| aesp_drawname         | Draws the target's name as text over the target               | 1             |
-| aesp_drawsteamid      | Draws the target's Steam ID as text over the target           | 1             |
-| aesp_drawping         | Draws the target's ping as text over the target               | 0             |
-| aesp_drawhealth       | Draws the target's health as text over the target             | 0             |
-| aesp_drawarmor        | Draws the target's armor as text over the target              | 0             |
-| aesp_drawgroup        | Draws the target ULX/other group as text over the target      | 0             |
-| aesp_darkrp_drawjob   | Draws the target's job as text over the target   [**✝**][1]   | 0             |
-| aesp_darkrp_drawmoney | Draws target's money as text over the target     [**✝**][1]   | 0             |
-| aesp_ttt_drawrole     | Draws the target's role as text over the target  [**♠**][1]   | 0             |
+| Command               | Purpose                                                       | Default Value | Notes |
+| --------------------- | ------------------------------------------------------------- | ------------- | ----- |
+| aesp_getgamemode      | Prints the name of the current gamemode. For developers.      | n/a           |       |
+| aesp_enabled          | Set to 1 to enable the ESP                                    | 0             |       |
+| aesp_maxdistance      | Targets further away than this distance will not be rendered  | 16384         |       |
+| aesp_offsety          | Sets the text offset up/down of each target                   | 50            |       |
+| aesp_drawmodel        | Draws the target's model through walls                        | 0             |[**Δ**][1]|
+| aesp_drawname         | Draws the target's name as text over the target               | 1             |       |
+| aesp_drawsteamid      | Draws the target's Steam ID as text over the target           | 1             |       |
+| aesp_drawping         | Draws the target's ping as text over the target               | 0             |       |
+| aesp_drawhealth       | Draws the target's health as text over the target             | 0             |       |
+| aesp_drawarmor        | Draws the target's armor as text over the target              | 0             |       |
+| aesp_drawgroup        | Draws the target ULX/other group as text over the target      | 0             |       |
+| aesp_darkrp_drawjob   | Draws the target's job as text over the target                | 0             |[**✝**][1]|
+| aesp_darkrp_drawmoney | Draws target's money as text over the target                  | 0             |[**✝**][1]|
+| aesp_ttt_drawrole     | Draws the target's role as text over the target               | 0             |[**♠**][1]|
 
 ##### Footnotes:   
 **Δ:** Can be more resource-intensive. Disable this if you notice significant performance drops.   

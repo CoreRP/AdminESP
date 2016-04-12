@@ -6,8 +6,6 @@ AESP.Config.Enabled     = CreateClientConVar("aesp_enabled", "0" , false, false)
 -- Set the max draw distance
 AESP.Config.MaxDistance = CreateClientConVar("aesp_maxdistance", "16384", true, false)
 
--- Set the text offset in the x direction
-AESP.Config.TextOffsetX = CreateClientConVar("aesp_offsetx", "0" , true, false)
 -- Set the text offset in the y direction
 AESP.Config.TextOffsetY = CreateClientConVar("aesp_offsety", "50" , true, false)
 
@@ -35,13 +33,13 @@ AESP.Config.ShowMoney   = CreateClientConVar("aesp_darkrp_drawmoney", "0", true,
 -- Draw the target's role (i.e. Traitor, Innocent, Detective)
 AESP.Config.ShowRole    = CreateClientConVar("aesp_ttt_drawrole", "0", true, false)
 
+-- Use this command to get the name of your custom gamemode if you want to add more
+-- text drawing methods specific to that gamemode.
 concommand.Add("aesp_getgamemode", 
     function()
         print(string.lower(gmod.GetGamemode().Name))
-    end, 
-    nil, 
-    [[Use this command to find the name for your custom gamemode.
-    This helps if you're trying to add custom (per-gamemode) text.]])
+    end
+)
 
 surface.CreateFont("aesp_font", {
    font         = "Arial",

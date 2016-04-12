@@ -2,42 +2,46 @@ AESP = AESP or {}
 AESP.Config = AESP.Config or {}
 
 -- Enable/disable the ESP
-AESP.Config.Enabled     = CreateClientConVar("admin_esp_enabled", "0" , false, false)
+AESP.Config.Enabled     = CreateClientConVar("aesp_enabled", "0" , false, false)
 -- Set the max draw distance
-AESP.Config.MaxDistance = CreateClientConVar("admin_esp_maxdistance", "999999", true, false)
+AESP.Config.MaxDistance = CreateClientConVar("aesp_maxdistance", "16384", true, false)
 
 -- Set the text offset in the x direction
-AESP.Config.TextOffsetX = CreateClientConVar("admin_esp_offsetx", "0" , true, false)
+AESP.Config.TextOffsetX = CreateClientConVar("aesp_offsetx", "0" , true, false)
 -- Set the text offset in the y direction
-AESP.Config.TextOffsetY = CreateClientConVar("admin_esp_offsety", "0" , true, false)
+AESP.Config.TextOffsetY = CreateClientConVar("aesp_offsety", "0" , true, false)
 
 -- Draw the target's model, visible through the world
-AESP.Config.ShowModel   = CreateClientConVar("admin_esp_drawmodel", 1, true, false)
+AESP.Config.ShowModel   = CreateClientConVar("aesp_drawmodel", "0", true, false)
 
 -- Draw the target's name
-AESP.Config.ShowName    = CreateClientConVar("admin_esp_drawname", "1", true, false)
+AESP.Config.ShowName    = CreateClientConVar("aesp_drawname", "1", true, false)
 -- Draw the target's Steam ID
-AESP.Config.ShowSteamID = CreateClientConVar("admin_esp_drawsteamid", "1", true, false)
+AESP.Config.ShowSteamID = CreateClientConVar("aesp_drawsteamid", "1", true, false)
 -- Draw the target's ping
-AESP.Config.ShowPing    = CreateClientConVar("admin_esp_drawping", "0", true, false)
+AESP.Config.ShowPing    = CreateClientConVar("aesp_drawping", "0", true, false)
 -- Draw the target's health
-AESP.Config.ShowHealth  = CreateClientConVar("admin_esp_drawhealth", "0", true, false)
+AESP.Config.ShowHealth  = CreateClientConVar("aesp_drawhealth", "0", true, false)
 -- Draw the target's armor
-AESP.Config.ShowArmor   = CreateClientConVar("admin_esp_drawarmor", "0", true, false)
+AESP.Config.ShowArmor   = CreateClientConVar("aesp_drawarmor", "0", true, false)
 -- Draw the target's group (i.e. ULX)
-AESP.Config.ShowGroup   = CreateClientConVar("admin_esp_drawgroup", "0", true, false)
+AESP.Config.ShowGroup   = CreateClientConVar("aesp_drawgroup", "0", true, false)
 -- DarkRP Only
 -- Draw the target's job
-AESP.Config.ShowJob     = CreateClientConVar("admin_esp_darkrp_drawjob", "0", true, false)
+AESP.Config.ShowJob     = CreateClientConVar("aesp_darkrp_drawjob", "0", true, false)
 -- Draw the target's money
-AESP.Config.ShowMoney   = CreateClientConVar("admin_esp_darkrp_drawmoney", "0", true, false)
+AESP.Config.ShowMoney   = CreateClientConVar("aesp_darkrp_drawmoney", "0", true, false)
 -- TTT only
 -- Draw the target's role (i.e. Traitor, Innocent, Detective)
-AESP.Config.ShowRole    = CreateClientConVar("admin_esp_ttt_drawrole", "0", true, false)
+AESP.Config.ShowRole    = CreateClientConVar("aesp_ttt_drawrole", "0", true, false)
 
-concommand.Add("admin_esp_getgamemode", function()
-    print(string.lower(gmod.GetGamemode().Name))
-end)
+concommand.Add("aesp_getgamemode", 
+    function()
+        print(string.lower(gmod.GetGamemode().Name))
+    end, 
+    nil, 
+    [[Use this command to find the name for your custom gamemode.
+    This helps if you're trying to add custom (per-gamemode) text.]])
 
 surface.CreateFont("aesp_font", {
    font         = "Arial",

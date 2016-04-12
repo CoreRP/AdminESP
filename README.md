@@ -44,8 +44,8 @@ All of the configuration is done client-side. Note that, in this addon's current
 Please feel free to submit bug reports and pull requests for more features! You can find a current list of the features in development [here][2].
 
 ## Credits
-[SubjectAlpha][3]: Original creator of the script
-[RalphORama][4]: AESP v2.0 update.
+- [SubjectAlpha][3]: Original creator of the script
+- [RalphORama][4]: AESP v2.0 update.
 
 [1]: #footnotes
 [2]: https://trello.com/b/kUerE74L/admin-esp

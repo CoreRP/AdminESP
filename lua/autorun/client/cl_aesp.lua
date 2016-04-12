@@ -3,6 +3,7 @@ local math      = math
 local string    = string
 local cam       = cam
 local table     = table
+local team      = team
 
 AESP = AESP or {}
 AESP.Config = AESP.Config or {}
@@ -41,7 +42,7 @@ AESP.Config.ShowRole    = CreateClientConVar("aesp_ttt_drawrole", "0", true, fal
 
 -- Use this command to get the name of your custom gamemode if you want to add more
 -- text drawing methods specific to that gamemode.
-concommand.Add("aesp_getgamemode", 
+concommand.Add("aesp_getgamemode",
     function()
         print(string.lower(gmod.GetGamemode().Name))
     end
@@ -55,7 +56,9 @@ surface.CreateFont("aesp_font", {
 })
 
 local function DrawText(text, color, x, y)
-    local textWidth, _ = draw.SimpleTextOutlined(text, "aesp_font", x, y, color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+    local textWidth, _ = draw.SimpleTextOutlined(text, "aesp_font", x, y, color,
+        TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+
     return textWidth
 end
 
@@ -63,17 +66,19 @@ local function CalculateTextHeight()
     local totalHeight = 0
     local gamemodeName = string.lower(gmod.GetGamemode().Name)
 
-    if AESP.Config.ShowName:GetBool() then      totalHeight = totalHeight + 13 end
-    if AESP.Config.ShowSteamID:GetBool() then   totalHeight = totalHeight + 13 end
-    if AESP.Config.ShowPing:GetBool() then      totalHeight = totalHeight + 13 end
-    if AESP.Config.ShowHealth:GetBool() then    totalHeight = totalHeight + 13 end
-    if AESP.Config.ShowArmor:GetBool() then     totalHeight = totalHeight + 13 end
-    if AESP.Config.ShowGroup:GetBool() then     totalHeight = totalHeight + 13 end
+    if AESP.Config.ShowName:GetBool()       then totalHeight = totalHeight + 13 end
+    if AESP.Config.ShowSteamID:GetBool()    then totalHeight = totalHeight + 13 end
+    if AESP.Config.ShowPing:GetBool()       then totalHeight = totalHeight + 13 end
+    if AESP.Config.ShowHealth:GetBool()     then totalHeight = totalHeight + 13 end
+    if AESP.Config.ShowArmor:GetBool()      then totalHeight = totalHeight + 13 end
+    if AESP.Config.ShowGroup:GetBool()      then totalHeight = totalHeight + 13 end
     if gamemodeName == "darkrp" then
-        if AESP.Config.ShowJob:GetBool() then   totalHeight = totalHeight + 13 end
-        if AESP.Config.ShowMoney:GetBool() then totalHeight = totalHeight + 13 end
+        if AESP.Config.ShowJob:GetBool()    then totalHeight = totalHeight + 13 end
+        if AESP.Config.ShowMoney:GetBool()  then totalHeight = totalHeight + 13 end
     end
-    if AESP.Config.ShowRole:GetBool() and gamemodeName == "trouble in terrorist town" then totalHeight = totalHeight + 13 end
+    if gamemodeName == "trouble in terrorist town" then
+        if AESP.Config.ShowRole:GetBool()   then totalHeight = totalHeight + 13 end
+    end
 
     if totalHeight ~= 0 then
         return totalHeight
@@ -85,7 +90,7 @@ end
 local function CalculateMaxTextWidth(stringArray)
     surface.SetFont("aesp_font")
     local maxWidth = 0
-    
+
     for _, checkString in pairs(stringArray) do
         w, h = surface.GetTextSize(checkString)
         if w > maxWidth then maxWidth = w end
@@ -96,10 +101,10 @@ local function CalculateMaxTextWidth(stringArray)
 end
 
 local function DrawTextESP(target)
-    -- Don't do anything if totalheight is false 
+    -- Don't do anything if totalheight is false
     -- (i.e. none of the aesp_draw flags are enabled)
     if not CalculateTextHeight() then return end
-    
+
     -- darkrp, terrortown, sandbox, murder, etc
     local gamemodeName = string.lower(gmod.GetGamemode().Name)
 
@@ -145,6 +150,7 @@ local function DrawTextESP(target)
     -- TTT-specific draw commands
     elseif gamemodeName == "trouble in terrorst town" then
         if AESP.Config.ShowRole:GetBool() then
+            --[[
             -- Find the name of the team the target's on
             local roleText = ""
             if target:IsTraitor() then
@@ -154,8 +160,9 @@ local function DrawTextESP(target)
             else
                 roleText = "Innocent"
             end
+            --]]
             -- Insert the value
-            table.insert(infoArray, "Role:" .. roleText)
+            table.insert(infoArray, "Role:" .. team.GetName(target:Team()))
         end
     end
 
@@ -179,7 +186,7 @@ end
 
 local function DrawModelESP(target)
     if not AESP.Config.ShowModel:GetBool() then return end
-    
+
     cam.Start3D(EyePos(), EyeAngles())
         cam.IgnoreZ(true)
         target:DrawModel(STUDIO_NOSHADOWS)

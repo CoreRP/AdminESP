@@ -170,7 +170,7 @@ local function DrawTextESP(target)
     local maxWidth = CalculateMaxTextWidth(infoArray)
 
     -- Create a background for our text so it doesn't get hard to read
-    local bgpanel = draw.RoundedBox(10,     -- Radius of corners
+    draw.RoundedBox(10,     -- Radius of corners
         textPosition.x - (maxWidth / 2),    -- x position of panel
         textPosition.y - totalHeight - 10,  -- y position of panel
         maxWidth,                           -- width of panel

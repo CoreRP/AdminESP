@@ -9,7 +9,7 @@ AESP.Config.MaxDistance = CreateClientConVar("aesp_maxdistance", "16384", true, 
 -- Set the text offset in the x direction
 AESP.Config.TextOffsetX = CreateClientConVar("aesp_offsetx", "0" , true, false)
 -- Set the text offset in the y direction
-AESP.Config.TextOffsetY = CreateClientConVar("aesp_offsety", "0" , true, false)
+AESP.Config.TextOffsetY = CreateClientConVar("aesp_offsety", "50" , true, false)
 
 -- Draw the target's model, visible through the world
 AESP.Config.ShowModel   = CreateClientConVar("aesp_drawmodel", "0", true, false)
@@ -59,10 +59,7 @@ local function DrawTextESP(target)
     local gamemodeName = string.lower(gmod.GetGamemode().Name)
 
     -- Where to draw the text in relation to the target
-    -- TODO: Make it so this doesn't scale based on distance from target
-    local initialTextPos = (target:GetPos() + Vector(0, 0, 50)):ToScreen()
-    local textPosition = Vector(initialTextPos.x + AESP.Config.TextOffsetX:GetInt(),
-        initialTextPos.y + AESP.Config.TextOffsetY:GetInt())
+    local textPosition = (target:GetPos() + Vector(0, 0, AESP.Config.TextOffsetY:GetInt())):ToScreen()
     local nextLineOffset = 0
     local textColor = Color(255, 255, 255, 255)
 
